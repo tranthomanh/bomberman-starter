@@ -4,6 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.awt.*;
+
 public abstract class Entity {
     //Tọa độ X tính từ góc trái trên trong Canvas
     protected int x;
@@ -14,8 +16,12 @@ public abstract class Entity {
     protected Image img;
 
     public int counter = 0;
-    public boolean up, down, left, right;
-    public int speed;
+    public int speed = 0;
+    public Rectangle solidArea;
+    public String direction = null;
+    public int type = 0;
+    public boolean collision = false;
+    public boolean isLive = true;
     public Entity(){
 
     }

@@ -1,6 +1,7 @@
 package uet.oop.bomberman;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -10,6 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import org.w3c.dom.ls.LSOutput;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.graphics.SpriteSheet;
@@ -30,14 +32,20 @@ public class BombermanGame extends Application {
     
     private GraphicsContext gc;
     private Canvas canvas;
-    private List<Entity> entities = new ArrayList<>();
+    public List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     Entity bomberman = new Bomber();
     Entity[][] entity;
     Scene scene;
     public int SpriteCounter = 0;
+    public int numBomb = 1;
+    private long curTime;
+    public Bom bom = new Bom();
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public boolean collision = false;
+    public boolean hasBomb = false;
+    public boolean bombIsPlanted = false;
+    public boolean flameItem = false;
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
@@ -58,12 +66,16 @@ public class BombermanGame extends Application {
             // Them scene vao stage
             stage.setScene(scene);
             stage.show();
-            entities.add(bomberman);
             AnimationTimer timer = new AnimationTimer() {
                 @Override
                 public void handle(long l) {
                     render();
                     update();
+                    try {
+                        Thread.sleep(1000 / 60);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             };
             timer.start();
@@ -118,12 +130,6 @@ public class BombermanGame extends Application {
                             stillObjects.add(object);
                             entity[i][j] = object;
                         }
-                        else if(cur == ' '){
-                            img = Sprite.grass.getFxImage();
-                            object = new Grass(j, i, img);
-                            stillObjects.add(object);
-                            entity[i][j] = object;
-                        }
                         else if(cur == '*'){
                             img = Sprite.brick.getFxImage();
                             object = new Brick(j,i,img);
@@ -132,20 +138,26 @@ public class BombermanGame extends Application {
                         }
                         else if(cur == '1'){
                             img = Sprite.doll_left1.getFxImage();
-                            Entity doll = new Doll(j,i,img, 2);
+                            Entity doll = new Doll(j,i,img, 4);
                             img = Sprite.grass.getFxImage();
                             object = new Grass(j,i,img);
                             stillObjects.add(object);
                             entities.add(doll);
                             entity[i][j] = object;
                         }
-                        else {
+                        else if(cur == '2'){
                             img = Sprite.minvo_left1.getFxImage();
-                            Entity minvo = new Minvo(j,i, img, 4);
+                            Entity minvo = new Minvo(j,i, img, 8);
                             img = Sprite.grass.getFxImage();
                             object = new Grass(j,i,img);
                             stillObjects.add(object);
                             entities.add(minvo);
+                            entity[i][j] = object;
+                        }
+                        else {
+                            img = Sprite.grass.getFxImage();
+                            object = new Grass(j, i, img);
+                            stillObjects.add(object);
                             entity[i][j] = object;
                         }
                     }
@@ -158,12 +170,24 @@ public class BombermanGame extends Application {
 
         public void update() {
             entities.forEach(g -> {
-                g.update();
+                g.update(this);
             });
+            bomberman.update(this);
+            sceneSetKey(this);
+            if(bombIsPlanted){
+                if(bom.checkBom(this, curTime, flameItem, entity)){
+                    bombIsPlanted = false;
+                    bom.deleteBom(this);
+                    numBomb++;
+                }
+            }
+        }
+        public void sceneSetKey(BombermanGame gp){
+            if(gp.bomberman.isLive == false)return;
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent keyEvent) {
-                    collision = false;
+                    bomberman.collision = false;
                     switch (keyEvent.getCode()){
                         case W:
                             bomberman.direction = "up";
@@ -177,10 +201,23 @@ public class BombermanGame extends Application {
                         case D:
                             bomberman.direction = "right";
                             break;
+                        case SPACE:
+                            hasBomb = true;
+                            bom = new Bom(bomberman.getX(), bomberman.getY(), Sprite.bomb.getFxImage());
+                            break;
+                    }
+                    if(hasBomb){
+                        bombIsPlanted = true;
+
+                        if(bombIsPlanted && System.currentTimeMillis() - curTime > 1000 && numBomb > 0) {
+                            bom.createBom(gp);
+                            numBomb--;
+                        }
+                        curTime = System.currentTimeMillis();
                     }
                     if(bomberman.direction == null)return;
                     collisionChecker.checkTile(bomberman);
-                    if(collision == false){
+                    if(bomberman.collision == false && bomberman.isLive == true){
                         bomberman.counter ++;
                         if(bomberman.counter == 3)bomberman.counter = 0;
                         switch (bomberman.direction){
@@ -228,16 +265,19 @@ public class BombermanGame extends Application {
                         case D:
                             bomberman.direction = null;
                             break;
+                        case SPACE:
+                            hasBomb = false;
+                            break;
                     }
                 }
             });
         }
-
         public void render() {
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             stillObjects.forEach(g -> {
                 g.render(gc);
             });
+            //if(hasBomb)bom.render(gc);
             entities.forEach(g -> g.render(gc));
             bomberman.render(gc);
         }

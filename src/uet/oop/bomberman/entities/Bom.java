@@ -58,7 +58,6 @@ public class Bom extends Entity{
         else {
             if (!flameItem) {
                 if (BomCount >= 20) {
-
                     setImage(Sprite.bomb_exploded.getFxImage());
                     initFlame0();
                     brickBreak0(pane, entity);
@@ -214,9 +213,9 @@ public class Bom extends Entity{
             if(obj[y-1][x] instanceof Brick){
                 pane.entities.remove(obj[y-1][x]);
                 Entity oj = new Grass(x, y-1, Sprite.grass.getFxImage());
-                oj.miss = 30;
+                oj.miss = 60;
                 obj[y-1][x] = oj;
-                pane.entities.add(oj);
+                pane.entities.add(0, oj);
             }
         }
         if(obj[y+1][x] instanceof Wall||obj[y+1][x] instanceof Brick){
@@ -226,9 +225,9 @@ public class Bom extends Entity{
             if(obj[y+1][x] instanceof Brick){
                 pane.entities.remove(obj[y+1][x]);
                 Entity oj = new Grass(x, y+1, Sprite.grass.getFxImage());
-                oj.miss = 30;
+                oj.miss = 60;
                 obj[y+1][x] = oj;
-                pane.entities.add(oj);
+                pane.entities.add(0, oj);
             }
         }
         if(obj[y][x-1] instanceof Wall||obj[y][x-1] instanceof Brick){
@@ -237,9 +236,9 @@ public class Bom extends Entity{
             if(obj[y][x-1] instanceof Brick){
                 pane.entities.remove(obj[y][x-1]);
                 Entity oj = new Grass(x-1, y, Sprite.grass.getFxImage());
-                oj.miss = 30;
+                oj.miss = 60;
                 obj[y][x-1] = oj;
-                pane.entities.add(oj);
+                pane.entities.add(0, oj);
             }
         }
         if(obj[y][x+1] instanceof Wall||obj[y][x+1] instanceof Brick){
@@ -248,9 +247,9 @@ public class Bom extends Entity{
             if(obj[y][x+1] instanceof Brick){
                 pane.entities.remove(obj[y][x+1]);
                 Entity oj = new Grass(x+1,y,Sprite.grass.getFxImage());
-                oj.miss = 30;
+                oj.miss = 60;
                 obj[y][x+1] = oj;
-                pane.entities.add(oj);
+                pane.entities.add(0, oj);
             }
         }
 

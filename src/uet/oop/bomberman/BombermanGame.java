@@ -34,8 +34,10 @@ public class BombermanGame extends Application {
     private Canvas canvas;
     public List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
+    public List<Entity> minvoList = new ArrayList<>();
+    public List<Entity> dollList = new ArrayList<>();
     Entity bomberman = new Bomber();
-    Entity[][] entity;
+    public Entity[][] entity;
     Scene scene;
     public int SpriteCounter = 0;
     public int numBomb = 1;
@@ -89,7 +91,7 @@ public class BombermanGame extends Application {
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String line = br.readLine();
                 worldHeight = worldWidth = 0;
-                int stt = 0;
+                int stt = 1;
                 for(int i=0; i<line.length(); i++){
                     char cur = line.charAt(i);
                     int ch = cur - '0';
@@ -106,6 +108,7 @@ public class BombermanGame extends Application {
                         bomberman.speed = 10* bomberman.speed + ch;
                     }
                 }
+                //System.out.println(bomberman.speed);
                 entity = new Entity[worldHeight][worldWidth];
                 for (int i = 0; i < worldHeight; i++) {
                     line = br.readLine();
@@ -144,6 +147,7 @@ public class BombermanGame extends Application {
                             stillObjects.add(object);
                             entities.add(doll);
                             entity[i][j] = object;
+                            dollList.add(doll);
                         }
                         else if(cur == '2'){
                             img = Sprite.minvo_left1.getFxImage();
@@ -153,6 +157,7 @@ public class BombermanGame extends Application {
                             stillObjects.add(object);
                             entities.add(minvo);
                             entity[i][j] = object;
+                            minvoList.add(minvo);
                         }
                         else {
                             img = Sprite.grass.getFxImage();
@@ -169,9 +174,20 @@ public class BombermanGame extends Application {
         }
 
         public void update() {
+            ArrayList<Entity> deleteList = new ArrayList<>();
             entities.forEach(g -> {
-                g.update(this);
+                if(g.isLive == false && g.countDead == 0){
+                    deleteList.add(g);
+                }
             });
+            deleteList.forEach(g -> {
+               entities.remove(g);
+            });
+            if(bomberman.isLive == true){
+                entities.forEach(g -> {
+                    g.update(this);
+                });
+            }
             bomberman.update(this);
             sceneSetKey(this);
             if(bombIsPlanted){

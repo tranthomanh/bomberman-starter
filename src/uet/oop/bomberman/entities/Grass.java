@@ -14,8 +14,8 @@ public class Grass extends Entity {
     @Override
     public void render(GraphicsContext gc) {
         if(miss > 0){
-            if(miss >= 20)gc.drawImage(Sprite.brick_exploded.getFxImage(), x, y);
-            else if(miss >= 10)gc.drawImage(Sprite.brick_exploded1.getFxImage(), x, y);
+            if(miss >= 40)gc.drawImage(Sprite.brick_exploded.getFxImage(), x, y);
+            else if(miss >= 20)gc.drawImage(Sprite.brick_exploded1.getFxImage(), x, y);
             else gc.drawImage(Sprite.brick_exploded2.getFxImage(), x, y);
             miss--;
         }else{

@@ -18,6 +18,6 @@ public class Flame extends Entity{
 
     @Override
     public void render(GraphicsContext gc) {
-        super.render(gc);
+        gc.drawImage(img, x, y);
     }
 }

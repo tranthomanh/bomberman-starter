@@ -16,9 +16,38 @@ public class Minvo extends Entity{
         solidArea = new Rectangle(0,  0, Sprite.SCALED_SIZE - 1, Sprite.SCALED_SIZE - 1);
         type = 1;
     }
-
+    public boolean check(Bom bomb, int x, int y){
+        int posX = bomb.getX();
+        int posY = bomb.getY();
+        int x1 = posX - Sprite.SCALED_SIZE;
+        int x2 = posX + Sprite.SCALED_SIZE;
+        int x3 = posX + 2 * Sprite.SCALED_SIZE;
+        int y1 = posY - Sprite.SCALED_SIZE;
+        int y2 = posY + Sprite.SCALED_SIZE;
+        int y3 = posY + 2 * Sprite.SCALED_SIZE;
+        if(posX < x && x < x2 && y1 < y && y < y3) {
+            return true;
+        }
+        if(x1 < x && x < x3 && posY < y && y < y2) {
+            return true;
+        }
+        return false;
+    }
     @Override
     public void update(BombermanGame gp) {
+        if(gp.bom.isLive && gp.bom.BomCount < 60){
+            if(check(gp.bom, x, y) || check(gp.bom, x + 32, y) || check(gp.bom, x, y + 32) || check(gp.bom, x+32, y+32)){
+                isLive = false;
+                countDead = 90;
+            }
+        }
+        if(isLive == false){
+            if(countDead > 0){
+                setImage(Sprite.minvo_dead.getFxImage());
+                countDead --;
+            }
+            else return;
+        }
         if(direction == null)direction = "up";
         spriteCounter++;
         if(spriteCounter == 20){
@@ -82,6 +111,7 @@ public class Minvo extends Entity{
 
     @Override
     public void render(GraphicsContext gc) {
+        if(isLive == false)return;
         if(counter == 40){
             counter = 0;
             type = 1 - type;

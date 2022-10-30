@@ -12,8 +12,8 @@ import java.util.Map;
 public class Doll extends Entity{
     int counter = 0;
     int type = 0;
-    public Doll(int xUnit, int yUnit, Image img, int speed) {
-        super(xUnit, yUnit, img, speed);
+    public Doll(int xUnit, int yUnit, Image img, int speed, BombermanGame pane) {
+        super(xUnit, yUnit, img, speed, pane);
         solidArea = new Rectangle(0,  0, Sprite.SCALED_SIZE - 1, Sprite.SCALED_SIZE - 1);
         type = 1;
     }

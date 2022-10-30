@@ -5,8 +5,8 @@ import uet.oop.bomberman.BombermanGame;
 
 public class Wall extends Entity {
 
-    public Wall(int x, int y, Image img) {
-        super(x, y, img, 0);
+    public Wall(int x, int y, Image img, BombermanGame pane) {
+        super(x, y, img, 0, pane);
         type = 6;
     }
 

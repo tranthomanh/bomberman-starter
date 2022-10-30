@@ -10,12 +10,12 @@ import uet.oop.bomberman.graphics.Sprite;
 public class Bom extends Entity{
     Flame[][] flames = new Flame[4][2];
 
-    public Bom(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img, 0);
+    public Bom(int xUnit, int yUnit, Image img, BombermanGame pane) {
+        super(xUnit, yUnit, img, 0, pane);
         x = xUnit;
         y = yUnit;
         for(int i=0; i<4; i++)
-            for(int j=0; j<2; j++)flames[i][j] = new Flame(0, 0, Sprite.explosion_horizontal2.getFxImage());
+            for(int j=0; j<2; j++)flames[i][j] = new Flame(0, 0, Sprite.explosion_horizontal2.getFxImage(), pane);
         initFlame();
     }
 
@@ -207,15 +207,15 @@ public class Bom extends Entity{
     public void brickBreak0(BombermanGame pane, Entity obj[][]){
         int x =(int) this.x / 32;
         int y = (int) this.y / 32;
-        if(obj[y-1][x] instanceof Wall||obj[y-1][x] instanceof Brick){
+        if(y >= 1 && (obj[y-1][x] instanceof Wall||obj[y-1][x] instanceof Brick)){
             flames[0][1].setx(-50);
             flames[0][1].sety(-50);
             if(obj[y-1][x] instanceof Brick){
                 pane.entities.remove(obj[y-1][x]);
-                Entity oj = new Grass(x, y-1, Sprite.grass.getFxImage());
+                Entity oj = new Grass(x, y-1, Sprite.grass.getFxImage(), pane);
                 oj.miss = 60;
                 obj[y-1][x] = oj;
-                pane.entities.add(0, oj);
+                pane.stillObjects.add(oj);
             }
         }
         if(obj[y+1][x] instanceof Wall||obj[y+1][x] instanceof Brick){
@@ -224,21 +224,21 @@ public class Bom extends Entity{
             //System.out.println(obj[x][y+1].type);
             if(obj[y+1][x] instanceof Brick){
                 pane.entities.remove(obj[y+1][x]);
-                Entity oj = new Grass(x, y+1, Sprite.grass.getFxImage());
+                Entity oj = new Grass(x, y+1, Sprite.grass.getFxImage(), pane);
                 oj.miss = 60;
                 obj[y+1][x] = oj;
-                pane.entities.add(0, oj);
+                pane.stillObjects.add(oj);
             }
         }
-        if(obj[y][x-1] instanceof Wall||obj[y][x-1] instanceof Brick){
+        if(x >= 1 && (obj[y][x-1] instanceof Wall||obj[y][x-1] instanceof Brick)){
             flames[2][1].setx(-50);
             flames[2][1].sety(-50);
             if(obj[y][x-1] instanceof Brick){
                 pane.entities.remove(obj[y][x-1]);
-                Entity oj = new Grass(x-1, y, Sprite.grass.getFxImage());
+                Entity oj = new Grass(x-1, y, Sprite.grass.getFxImage(), pane);
                 oj.miss = 60;
                 obj[y][x-1] = oj;
-                pane.entities.add(0, oj);
+                pane.stillObjects.add(oj);
             }
         }
         if(obj[y][x+1] instanceof Wall||obj[y][x+1] instanceof Brick){
@@ -246,10 +246,10 @@ public class Bom extends Entity{
             flames[3][1].sety(-50);
             if(obj[y][x+1] instanceof Brick){
                 pane.entities.remove(obj[y][x+1]);
-                Entity oj = new Grass(x+1,y,Sprite.grass.getFxImage());
+                Entity oj = new Grass(x+1,y,Sprite.grass.getFxImage(), pane);
                 oj.miss = 60;
                 obj[y][x+1] = oj;
-                pane.entities.add(0, oj);
+                pane.stillObjects.add(oj);
             }
         }
 

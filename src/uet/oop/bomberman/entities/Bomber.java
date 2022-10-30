@@ -4,15 +4,15 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.items.Item;
+import uet.oop.bomberman.items.Speed;
+import uet.oop.bomberman.items.WallPass;
 
 import java.awt.*;
 
 public class Bomber extends Entity {
-    public Bomber(int x, int y, Image img, int speed) {
-        super( x, y, img, speed);
-        solidArea = new Rectangle(4,0,12, Sprite.SCALED_SIZE - 8);
-    }
-    public Bomber() {
+    public Bomber(int x, int y, Image img, int speed, BombermanGame pane) {
+        super( x, y, img, speed, pane);
         solidArea = new Rectangle(4,0,12, Sprite.SCALED_SIZE - 8);
     }
     public boolean check(Entity entity1, Entity entity2){
@@ -44,8 +44,36 @@ public class Bomber extends Entity {
         }
         return false;
     }
+    public void checkItems(int x, int y){
+        if(pane.items[x][y] == null)return;
+        Item cur = pane.items[x][y];
+        if(cur.isRender == false)return;
+        if(cur instanceof Speed){
+            speed += 4;
+        }
+        else if(cur instanceof WallPass){
+            pane.isWallPass = true;
+        }
+        else {
+            pane.isWin = true;
+        }
+        pane.items[x][y] = null;
+        pane.itemsList.remove(cur);
+    }
     @Override
     public void update(BombermanGame gp) {
+        int row = y/32;
+        int col = x/32;
+        int row2 = (y+31)/32;
+        int col2 = x/32;
+        int row3 = y/32;
+        int col3 = (x + 32)/32;
+        int row4 = row2;
+        int col4 = col3;
+        checkItems(row, col);
+        //checkItems(row2, col2);
+        //checkItems(row3, col3);
+        //checkItems(row4, col4);
         if(isLive == false){
             if(countDead > 0){
                 countDead --;

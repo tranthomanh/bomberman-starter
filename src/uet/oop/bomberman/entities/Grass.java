@@ -6,8 +6,8 @@ import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Grass extends Entity {
-    public Grass(int x, int y, Image img) {
-        super(x, y, img, 0);
+    public Grass(int x, int y, Image img, BombermanGame pane) {
+        super(x, y, img, 0, pane);
         type = 5;
     }
 
@@ -19,7 +19,13 @@ public class Grass extends Entity {
             else gc.drawImage(Sprite.brick_exploded2.getFxImage(), x, y);
             miss--;
         }else{
-            gc.drawImage(img,x,y);
+            int row = y/Sprite.SCALED_SIZE;
+            int col = x/Sprite.SCALED_SIZE;
+            if(pane.items[row][col] != null) {
+                System.out.println(row + " " + col);
+                pane.items[row][col].isRender = true;
+            }
+            else gc.drawImage(img,x,y);
         }
     }
 

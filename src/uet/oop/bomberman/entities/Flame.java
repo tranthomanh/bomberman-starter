@@ -5,8 +5,8 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 
 public class Flame extends Entity{
-    public Flame(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img, 0);
+    public Flame(int xUnit, int yUnit, Image img, BombermanGame pane) {
+        super(xUnit, yUnit, img, 0, pane);
         x = xUnit;
         y = yUnit;
     }

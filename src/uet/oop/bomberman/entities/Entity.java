@@ -26,15 +26,17 @@ public abstract class Entity {
     public int countDead = 0;
     public boolean collision = false;
     public boolean isLive = true;
+    BombermanGame pane;
     public Entity(){
 
     }
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
-    public Entity( int xUnit, int yUnit, Image img, int speed) {
+    public Entity( int xUnit, int yUnit, Image img, int speed, BombermanGame pane) {
         this.x = xUnit * Sprite.SCALED_SIZE;
         this.y = yUnit * Sprite.SCALED_SIZE;
         this.img = img;
         this.speed = speed;
+        this.pane = pane;
     }
     public void setImage(Image img){
         this.img = img;

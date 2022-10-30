@@ -11,8 +11,8 @@ import java.util.ArrayList;
 public class Minvo extends Entity{
     int counter = 0;
     int type = 0;
-    public Minvo(int xUnit, int yUnit, Image img, int speed) {
-        super(xUnit, yUnit, img, speed);
+    public Minvo(int xUnit, int yUnit, Image img, int speed, BombermanGame pane) {
+        super(xUnit, yUnit, img, speed, pane);
         solidArea = new Rectangle(0,  0, Sprite.SCALED_SIZE - 1, Sprite.SCALED_SIZE - 1);
         type = 1;
     }
